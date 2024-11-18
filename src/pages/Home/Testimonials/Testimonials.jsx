@@ -12,11 +12,19 @@ import SectionTitle from "../../../components/SectionTitle/SectionTitle";
 const Testimonials = () => {
   const [reviews, setReviews] = useState();
   useEffect(() => {
+    let ignore = false;
     const getReviews = async () => {
       const result = await axios.get("./reviews.json");
-      setReviews(result.data);
+      if (!ignore) {
+        if (result) {
+          setReviews(result.data);
+        }
+      }
     };
     getReviews();
+    return () => {
+      ignore = true;
+    };
   }, []);
   return (
     <>
