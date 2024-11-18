@@ -1,0 +1,4 @@
+.featured-item {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.694), rgba(0, 0, 0, 0.5)),
+    url("../../../assets/home/featured.jpg");
+}
