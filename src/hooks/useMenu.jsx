@@ -36,7 +36,6 @@ const useMenu = () => {
       ignore = true;
     };
   }, []);
-  console.log("API Response:", menu);
   return { menu, filteredMenu, loading };
 };
 
