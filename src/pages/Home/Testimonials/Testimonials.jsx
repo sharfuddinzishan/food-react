@@ -14,7 +14,7 @@ const Testimonials = () => {
   useEffect(() => {
     let ignore = false;
     const getReviews = async () => {
-      const result = await axios.get("./reviews.json");
+      const result = await axios.get("/reviews.json");
       if (!ignore) {
         if (result) {
           setReviews(result.data);
