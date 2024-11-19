@@ -1,6 +1,21 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import { AuthContext } from "./../../../contexts/AuthContext";
 
 const Navbar = () => {
+  const { logOut, user } = useContext(AuthContext);
+  const handleLogOut = () => {
+    logOut().then(() => {
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Logged Out Successfully",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    });
+  };
   const subMenu = (
     <>
       <li>
@@ -12,9 +27,17 @@ const Navbar = () => {
       <li>
         <Link to={"order/offered"}>Order</Link>
       </li>
-      <li>
-        <Link to={"login"}>Login</Link>
-      </li>
+      {user ? (
+        <li>
+          <Link onClick={handleLogOut} className="">
+            Logout
+          </Link>
+        </li>
+      ) : (
+        <li>
+          <Link to={"login"}>Login</Link>
+        </li>
+      )}
     </>
   );
   return (

@@ -1,16 +1,46 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LoadCanvasTemplate,
   loadCaptchaEnginge,
   validateCaptcha,
 } from "react-simple-captcha";
+import Swal from "sweetalert2";
+import { AuthContext } from "../../contexts/AuthContext";
 const Login = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location?.state?.from || "/";
+  const { signIn } = useContext(AuthContext);
   const captchaRef = useRef(null);
   const [disabled, setDisabled] = useState(true);
   const handleLogin = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const { email, password } = Object.fromEntries(formData.entries());
+    if (!email || !password) {
+      return;
+    }
+    signIn(email, password)
+      .then(() => {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Logged Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate(from, { replace: true });
+      })
+      .catch(() => {
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Logged Failed",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
   };
   const handleValidateCaptcha = () => {
     const user_captcha_value = captchaRef.current.value;
@@ -95,6 +125,12 @@ const Login = () => {
                 />
               </div>
             </form>
+            <div>
+              <p>
+                <small>Not Have Account? </small>
+                <Link to="/registration">Create New User</Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>
