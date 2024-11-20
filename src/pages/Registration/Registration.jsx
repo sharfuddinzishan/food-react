@@ -1,39 +1,43 @@
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { AuthContext } from "./../../contexts/AuthContext";
 
 const Registration = () => {
-  const { createUser } = useContext(AuthContext);
-
+  const { createUser, updateUserProfile } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
-
+  const navigate = useNavigate();
   const onSubmit = (data) => {
-    const { email, password } = data || {};
-    createUser(email, password)
-      .then(() => {
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Registered Successfully",
-          showConfirmButton: false,
-          timer: 1500,
+    const { email, password, name, photo } = data || {};
+    createUser(email, password).then(() => {
+      updateUserProfile(name, photo)
+        .then(() => {
+          reset();
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Registered Successfully",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          navigate("/");
+        })
+        .catch(() => {
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Registration Failed",
+            showConfirmButton: false,
+            timer: 1500,
+          });
         });
-      })
-      .catch(() => {
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: "Logged Failed",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      });
+    });
   };
   return (
     <>
@@ -49,6 +53,30 @@ const Registration = () => {
           </div>
           <div className="card bg-base-100 md:w-1/2 max-w-md shrink-0 shadow-2xl">
             <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Name</span>
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="name"
+                  className="input input-bordered"
+                  {...register("name", { required: "Name Must Be Provided" })}
+                />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Photo</span>
+                </label>
+                <input
+                  type="url"
+                  name="photo"
+                  placeholder="Photo URL"
+                  className="input input-bordered"
+                  {...register("photo", { required: "Photo Must Be Provided" })}
+                />
+              </div>
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Email</span>

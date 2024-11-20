@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { AuthContext } from "./../../../contexts/AuthContext";
 
 const Navbar = () => {
-  const { logOut, user } = useContext(AuthContext);
+  const { logOut, user, loading } = useContext(AuthContext);
   const handleLogOut = () => {
     logOut().then(() => {
       Swal.fire({
@@ -15,6 +15,9 @@ const Navbar = () => {
         timer: 1500,
       });
     });
+    if (loading) {
+      return;
+    }
   };
   const subMenu = (
     <>
@@ -28,11 +31,20 @@ const Navbar = () => {
         <Link to={"order/offered"}>Order</Link>
       </li>
       {user ? (
-        <li>
-          <Link onClick={handleLogOut} className="">
-            Logout
-          </Link>
-        </li>
+        <>
+          <li>
+            <Link onClick={handleLogOut} className="">
+              Logout
+            </Link>
+          </li>
+          {user && user?.photoURL && (
+            <img
+              src={user.photoURL}
+              className="w-5 h-5 rounded-full mt-2"
+              alt={user.email}
+            />
+          )}
+        </>
       ) : (
         <li>
           <Link to={"login"}>Login</Link>
@@ -52,14 +64,7 @@ const Navbar = () => {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
+              ></svg>
             </div>
             <ul
               tabIndex={0}
@@ -74,7 +79,8 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1">{subMenu}</ul>
         </div>
         <div className="navbar-end">
-          <a className="btn">Button</a>
+          {user?.displayName && <p>{user.displayName}</p>}
+          <a className="btn ml-2">Button</a>
         </div>
       </div>
     </>
