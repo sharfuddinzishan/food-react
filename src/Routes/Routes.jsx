@@ -38,4 +38,10 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  {
+    future: {
+      v7_partialHydration: true,
+      v7_skipActionErrorRevalidation: true,
+    },
+  },
 ]);

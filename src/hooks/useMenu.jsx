@@ -19,7 +19,7 @@ const useMenu = () => {
     let ignore = false;
     const getItems = async () => {
       try {
-        const result = await axios.get("/menu.json");
+        const result = await axios.get("http://localhost:5000/menu");
         if (!ignore && result?.data) {
           setMenu(result.data);
         }

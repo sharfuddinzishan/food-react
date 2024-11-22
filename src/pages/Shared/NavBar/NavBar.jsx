@@ -1,10 +1,13 @@
 import { useContext } from "react";
+import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useCart } from "../../../hooks/useCart";
 import { AuthContext } from "./../../../contexts/AuthContext";
 
 const Navbar = () => {
   const { logOut, user, loading } = useContext(AuthContext);
+  const [carts] = useCart();
   const handleLogOut = () => {
     logOut().then(() => {
       Swal.fire({
@@ -29,6 +32,12 @@ const Navbar = () => {
       </li>
       <li>
         <Link to={"order/offered"}>Order</Link>
+      </li>
+      <li>
+        <Link to={"order/offered"}>
+          <FaShoppingCart />
+          <div className="badge badge-secondary">+{carts?.length ?? 0}</div>
+        </Link>
       </li>
       {user ? (
         <>
